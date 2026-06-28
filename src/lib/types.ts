@@ -8,6 +8,12 @@ export interface Post {
   updated_at: string;
 }
 
+export interface User {
+  id: number;
+  username: string;
+  created_at: string;
+}
+
 export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;

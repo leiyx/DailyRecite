@@ -5,6 +5,7 @@ import type { Post } from "@/lib/types";
 
 interface PostDetailProps {
   postId: number | null;
+  loggedIn: boolean;
   onClose: () => void;
   onEdit: (post: Post) => void;
   onDelete: (id: number) => void;
@@ -34,6 +35,7 @@ function WavyHeading({ children }: { children: string }) {
 
 export default function PostDetail({
   postId,
+  loggedIn,
   onClose,
   onEdit,
   onDelete,
@@ -136,7 +138,7 @@ export default function PostDetail({
         </div>
 
         {/* Actions */}
-        {post && (
+        {post && loggedIn && (
           <div className="flex items-center gap-3 px-6 py-4 border-t border-[#d4e8d4] bg-[#fefcf5]">
             <button
               onClick={() => onEdit(post)}

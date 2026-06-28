@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPosts, createPost } from "@/lib/db";
+import { requireAuth } from "@/lib/auth";
 import type { ApiResponse, Post } from "@/lib/types";
 
 export async function GET(): Promise<NextResponse<ApiResponse<Post[]>>> {
@@ -18,6 +19,8 @@ export async function POST(
   req: NextRequest
 ): Promise<NextResponse<ApiResponse<Post>>> {
   try {
+    await requireAuth();
+
     const body = await req.json();
     const { date, title, article, notes } = body;
 
@@ -37,6 +40,12 @@ export async function POST(
 
     return NextResponse.json({ success: true, data: post }, { status: 201 });
   } catch (error: unknown) {
+    if (error instanceof Error && error.message === "UNAUTHORIZED") {
+      return NextResponse.json(
+        { success: false, error: "Authentication required" },
+        { status: 401 }
+      );
+    }
     if (
       error instanceof Error &&
       error.message.includes("UNIQUE constraint failed")

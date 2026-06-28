@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPostById, updatePost, deletePost } from "@/lib/db";
+import { requireAuth } from "@/lib/auth";
 import type { ApiResponse, Post } from "@/lib/types";
 
 export async function GET(
@@ -29,6 +30,8 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse<ApiResponse<Post>>> {
   try {
+    await requireAuth();
+
     const { id } = await params;
     const body = await req.json();
 
@@ -41,6 +44,12 @@ export async function PUT(
     }
     return NextResponse.json({ success: true, data: post });
   } catch (error: unknown) {
+    if (error instanceof Error && error.message === "UNAUTHORIZED") {
+      return NextResponse.json(
+        { success: false, error: "Authentication required" },
+        { status: 401 }
+      );
+    }
     if (
       error instanceof Error &&
       error.message.includes("UNIQUE constraint failed")
@@ -62,6 +71,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse<ApiResponse<null>>> {
   try {
+    await requireAuth();
+
     const { id } = await params;
     const deleted = deletePost(Number(id));
     if (!deleted) {
@@ -71,7 +82,13 @@ export async function DELETE(
       );
     }
     return NextResponse.json({ success: true, data: null });
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message === "UNAUTHORIZED") {
+      return NextResponse.json(
+        { success: false, error: "Authentication required" },
+        { status: 401 }
+      );
+    }
     return NextResponse.json(
       { success: false, error: "Failed to delete post" },
       { status: 500 }
