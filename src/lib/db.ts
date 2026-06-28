@@ -1,16 +1,17 @@
-import Database from "better-sqlite3";
-import path from "path";
+import { createClient, type Client } from "@libsql/client";
 import type { Post, User } from "./types";
 
-const DB_PATH = path.join(process.cwd(), "data", "posts.db");
+let client: Client | null = null;
 
-let db: Database.Database | null = null;
+async function getDb(): Promise<Client> {
+  if (!client) {
+    const url = process.env.TURSO_DATABASE_URL || "file:data/posts.db";
+    client = createClient({
+      url,
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    });
 
-function getDb(): Database.Database {
-  if (!db) {
-    db = new Database(DB_PATH);
-    db.pragma("journal_mode = WAL");
-    db.exec(`
+    await client.execute(`
       CREATE TABLE IF NOT EXISTS posts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT NOT NULL UNIQUE,
@@ -19,103 +20,141 @@ function getDb(): Database.Database {
         notes TEXT NOT NULL DEFAULT '',
         created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
         updated_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
-      );
+      )
+    `);
 
+    await client.execute(`
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL UNIQUE,
         password_hash TEXT NOT NULL,
         created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
-      );
+      )
     `);
   }
-  return db;
+  return client;
 }
 
 // ─── Users ───
 
-export function getUserCount(): number {
-  const stmt = getDb().prepare("SELECT COUNT(*) as count FROM users");
-  return (stmt.get() as { count: number }).count;
+export async function getUserCount(): Promise<number> {
+  const db = await getDb();
+  const result = await db.execute("SELECT COUNT(*) as count FROM users");
+  return (result.rows[0] as unknown as { count: number }).count;
 }
 
-export function getUserByUsername(username: string): (User & { password_hash: string }) | undefined {
-  const stmt = getDb().prepare(
-    "SELECT id, username, password_hash, created_at FROM users WHERE username = ?"
-  );
-  return stmt.get(username) as (User & { password_hash: string }) | undefined;
+export async function getUserByUsername(
+  username: string
+): Promise<(User & { password_hash: string }) | undefined> {
+  const db = await getDb();
+  const result = await db.execute({
+    sql: "SELECT id, username, password_hash, created_at FROM users WHERE username = ?",
+    args: [username],
+  });
+  return result.rows[0] as unknown as (User & { password_hash: string }) | undefined;
 }
 
-export function getUserById(id: number): User | undefined {
-  const stmt = getDb().prepare("SELECT id, username, created_at FROM users WHERE id = ?");
-  return stmt.get(id) as User | undefined;
+export async function getUserById(id: number): Promise<User | undefined> {
+  const db = await getDb();
+  const result = await db.execute({
+    sql: "SELECT id, username, created_at FROM users WHERE id = ?",
+    args: [id],
+  });
+  return result.rows[0] as unknown as User | undefined;
 }
 
-export function createUser(username: string, passwordHash: string): User {
-  const stmt = getDb().prepare(
-    "INSERT INTO users (username, password_hash) VALUES (@username, @passwordHash)"
-  );
-  const info = stmt.run({ username, passwordHash });
-  return getUserById(info.lastInsertRowid as number)!;
+export async function createUser(
+  username: string,
+  passwordHash: string
+): Promise<User> {
+  const db = await getDb();
+  const result = await db.execute({
+    sql: "INSERT INTO users (username, password_hash) VALUES (?, ?)",
+    args: [username, passwordHash],
+  });
+  const userId = Number(result.lastInsertRowid);
+  return (await getUserById(userId))!;
 }
 
-export function updateUserPassword(id: number, passwordHash: string): void {
-  const stmt = getDb().prepare("UPDATE users SET password_hash = ? WHERE id = ?");
-  stmt.run(passwordHash, id);
+export async function updateUserPassword(
+  id: number,
+  passwordHash: string
+): Promise<void> {
+  const db = await getDb();
+  await db.execute({
+    sql: "UPDATE users SET password_hash = ? WHERE id = ?",
+    args: [passwordHash, id],
+  });
 }
 
-export function getUserPasswordHash(id: number): string | undefined {
-  const stmt = getDb().prepare("SELECT password_hash FROM users WHERE id = ?");
-  const row = stmt.get(id) as { password_hash: string } | undefined;
+export async function getUserPasswordHash(
+  id: number
+): Promise<string | undefined> {
+  const db = await getDb();
+  const result = await db.execute({
+    sql: "SELECT password_hash FROM users WHERE id = ?",
+    args: [id],
+  });
+  const row = result.rows[0] as unknown as { password_hash: string } | undefined;
   return row?.password_hash;
 }
 
-export function getPosts(): Post[] {
-  const stmt = getDb().prepare(
-    "SELECT * FROM posts ORDER BY date DESC"
-  );
-  return stmt.all() as Post[];
+// ─── Posts ───
+
+export async function getPosts(): Promise<Post[]> {
+  const db = await getDb();
+  const result = await db.execute("SELECT * FROM posts ORDER BY date DESC");
+  return result.rows as unknown as Post[];
 }
 
-export function getPostById(id: number): Post | undefined {
-  const stmt = getDb().prepare("SELECT * FROM posts WHERE id = ?");
-  return stmt.get(id) as Post | undefined;
+export async function getPostById(id: number): Promise<Post | undefined> {
+  const db = await getDb();
+  const result = await db.execute({
+    sql: "SELECT * FROM posts WHERE id = ?",
+    args: [id],
+  });
+  return result.rows[0] as unknown as Post | undefined;
 }
 
-export function createPost(post: {
+export async function createPost(post: {
   date: string;
   title: string;
   article: string;
   notes: string;
-}): Post {
-  const stmt = getDb().prepare(
-    `INSERT INTO posts (date, title, article, notes)
-     VALUES (@date, @title, @article, @notes)`
-  );
-  const info = stmt.run(post);
-  return getPostById(info.lastInsertRowid as number)!;
+}): Promise<Post> {
+  const db = await getDb();
+  const result = await db.execute({
+    sql: "INSERT INTO posts (date, title, article, notes) VALUES (?, ?, ?, ?)",
+    args: [post.date, post.title, post.article, post.notes],
+  });
+  const id = Number(result.lastInsertRowid);
+  return (await getPostById(id))!;
 }
 
-export function updatePost(
+export async function updatePost(
   id: number,
   post: { date?: string; title?: string; article?: string; notes?: string }
-): Post | undefined {
-  const existing = getPostById(id);
+): Promise<Post | undefined> {
+  const existing = await getPostById(id);
   if (!existing) return undefined;
 
   const updated = { ...existing, ...post, id };
-  const stmt = getDb().prepare(
-    `UPDATE posts
-     SET date = @date, title = @title, article = @article, notes = @notes,
-         updated_at = datetime('now', 'localtime')
-     WHERE id = @id`
-  );
-  stmt.run(updated);
+  const db = await getDb();
+  await db.execute({
+    sql: `UPDATE posts
+          SET date = ?, title = ?, article = ?, notes = ?,
+              updated_at = datetime('now', 'localtime')
+          WHERE id = ?`,
+    args: [updated.date, updated.title, updated.article, updated.notes, id],
+  });
   return getPostById(id);
 }
 
-export function deletePost(id: number): boolean {
-  const stmt = getDb().prepare("DELETE FROM posts WHERE id = ?");
-  const info = stmt.run(id);
-  return info.changes > 0;
+export async function deletePost(id: number): Promise<boolean> {
+  const db = await getDb();
+  const result = await db.execute({
+    sql: "DELETE FROM posts WHERE id = ?",
+    args: [id],
+  });
+  return result.rowsAffected > 0;
 }

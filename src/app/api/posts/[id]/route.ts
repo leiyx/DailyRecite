@@ -9,7 +9,7 @@ export async function GET(
 ): Promise<NextResponse<ApiResponse<Post>>> {
   try {
     const { id } = await params;
-    const post = getPostById(Number(id));
+    const post = await getPostById(Number(id));
     if (!post) {
       return NextResponse.json(
         { success: false, error: "Post not found" },
@@ -35,7 +35,7 @@ export async function PUT(
     const { id } = await params;
     const body = await req.json();
 
-    const post = updatePost(Number(id), body);
+    const post = await updatePost(Number(id), body);
     if (!post) {
       return NextResponse.json(
         { success: false, error: "Post not found" },
@@ -74,7 +74,7 @@ export async function DELETE(
     await requireAuth();
 
     const { id } = await params;
-    const deleted = deletePost(Number(id));
+    const deleted = await deletePost(Number(id));
     if (!deleted) {
       return NextResponse.json(
         { success: false, error: "Post not found" },

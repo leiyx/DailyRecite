@@ -5,7 +5,7 @@ import type { ApiResponse, Post } from "@/lib/types";
 
 export async function GET(): Promise<NextResponse<ApiResponse<Post[]>>> {
   try {
-    const posts = getPosts();
+    const posts = await getPosts();
     return NextResponse.json({ success: true, data: posts });
   } catch (error) {
     return NextResponse.json(
@@ -31,7 +31,7 @@ export async function POST(
       );
     }
 
-    const post = createPost({
+    const post = await createPost({
       date,
       title: title || "",
       article,

@@ -24,7 +24,7 @@ export async function PUT(
       );
     }
 
-    const user = getUserById(userId);
+    const user = await getUserById(userId);
     if (!user) {
       return NextResponse.json(
         { success: false, error: "User not found" },
@@ -32,7 +32,7 @@ export async function PUT(
       );
     }
 
-    const passwordHash = getUserPasswordHash(userId);
+    const passwordHash = await getUserPasswordHash(userId);
     if (!passwordHash || !verifyPassword(oldPassword, passwordHash)) {
       return NextResponse.json(
         { success: false, error: "Current password is incorrect" },
@@ -41,7 +41,7 @@ export async function PUT(
     }
 
     const newHash = hashPassword(newPassword);
-    updateUserPassword(userId, newHash);
+    await updateUserPassword(userId, newHash);
 
     return NextResponse.json({ success: true, data: null });
   } catch (error: unknown) {

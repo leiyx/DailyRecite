@@ -8,7 +8,7 @@ export async function POST(
 ): Promise<NextResponse<ApiResponse<User>>> {
   try {
     // Only allow registration if no user exists
-    if (getUserCount() > 0) {
+    if (await getUserCount() > 0) {
       return NextResponse.json(
         { success: false, error: "Registration is closed" },
         { status: 403 }
@@ -31,7 +31,7 @@ export async function POST(
       );
     }
 
-    if (getUserByUsername(username)) {
+    if (await getUserByUsername(username)) {
       return NextResponse.json(
         { success: false, error: "Username already exists" },
         { status: 409 }
@@ -39,7 +39,7 @@ export async function POST(
     }
 
     const passwordHash = hashPassword(password);
-    const user = createUser(username, passwordHash);
+    const user = await createUser(username, passwordHash);
 
     // Auto-login after registration
     await setAuthCookie(user.id);

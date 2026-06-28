@@ -15,7 +15,7 @@ export async function GET(): Promise<
       });
     }
 
-    const user = getUserById(userId);
+    const user = await getUserById(userId);
     return NextResponse.json({
       success: true,
       data: { loggedIn: true, user: user ?? null },
