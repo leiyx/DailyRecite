@@ -50,9 +50,8 @@ npm run lint     # ESLint 检查
 卡片使用 7 色蓝调配色循环分配（`card.tsx` 的 `CARD_THEMES` 数组和 `post-detail.tsx` 的 `CARD_COLORS` 数组保持一致）：`#4A90D9`, `#5B8DEF`, `#6C8EBF`, `#3D7AB5`, `#7EB8DA`, `#A0C4E8`, `#89B4D9`
 
 - 每张卡片顶部有彩色条（`h-1.5`，hover 展开到 `h-2`）
-- 右上角 emoji 标签（`emoji-tag` class）
 - 底部三个装饰圆点
-- 文章预览已移除，卡片仅显示日期 + 标题
+- 显示日期 + 标题 + 文章摘要（前 60 字节，超出显示省略号）
 - 悬停效果：`scale(1.03)` + `translateY(-6px)` + 蓝色发光阴影
 
 ### 关键视觉约定
@@ -108,7 +107,7 @@ npm run lint     # ESLint 检查
 ### 前端组件 (`src/components/`)
 
 - `header.tsx` — 顶栏（标题 + 登录/用户菜单 + 新增按钮）
-- `card.tsx` — 单张卡片（日期 + 标题，7色蓝调主题色，emoji 标签，装饰圆点）
+- `card.tsx` — 单张卡片（日期 + 标题 + 文章摘要（前60字），7色蓝调主题色，装饰圆点）
 - `card-grid.tsx` — 响应式卡片网格，空态展示引导文案
 - `post-detail.tsx` — 文章详情 Modal（查看 + 条件渲染编辑/删除入口）
 - `post-form.tsx` — 新增/编辑表单 Modal
