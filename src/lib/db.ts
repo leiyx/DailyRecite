@@ -147,7 +147,7 @@ export async function updatePost(
           WHERE id = ?`,
     args: [updated.date, updated.title, updated.article, updated.notes, id],
   });
-  return getPostById(id);
+  return await getPostById(id);
 }
 
 export async function deletePost(id: number): Promise<boolean> {

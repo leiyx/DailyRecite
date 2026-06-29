@@ -44,6 +44,8 @@ next-env.d.ts
 # sqlite database
 /data/*.db
 /data/*.db-*
+*-wal
+*-shm
 
 # editor
 .vscode/
