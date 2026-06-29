@@ -103,10 +103,10 @@ export default function Home() {
         onLogout={handleLogout}
       />
 
-      <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-8">
+      <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-12">
         {loading ? (
           <div className="flex justify-center py-24">
-            <div className="size-6 border-2 border-green-200 border-t-green-600 rounded-full animate-spin" />
+            <div className="size-8 border-2 border-[#d0dae6] border-t-[#4A90D9] rounded-full animate-spin" />
           </div>
         ) : (
           <CardGrid
@@ -115,6 +115,15 @@ export default function Home() {
           />
         )}
       </main>
+
+      {/* Footer */}
+      <footer className="text-center pb-8 text-sm text-[#8fa1b5]">
+        <span className="inline-flex items-center gap-1">
+          Made with
+          <span className="inline-block animate-sparkle">💖</span>
+          — 每日背诵
+        </span>
+      </footer>
 
       {/* Detail modal */}
       {modal?.type === "detail" && (

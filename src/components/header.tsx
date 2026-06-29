@@ -36,11 +36,13 @@ export default function Header({
   }, [menuOpen]);
 
   return (
-    <header className="sticky top-0 z-40 bg-[#fefcf5]/85 backdrop-blur border-b border-[#d4e8d4]">
+    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Title */}
-        <h1 className="relative text-xl font-bold text-[#1a2e1a] font-hand tracking-wide">
+        <h1 className="relative font-display text-xl font-black text-[#1a2332] tracking-wide flex items-center gap-2">
           每日背诵
+          <span className="animate-spin-slow text-lg inline-block">⭐</span>
+          {/* Wavy underline */}
           <svg
             className="absolute -bottom-1 left-0 w-full"
             viewBox="0 0 100 4"
@@ -50,7 +52,7 @@ export default function Header({
           >
             <path
               d="M0,2 Q12,0 25,2 Q38,4 50,2 Q62,0 75,2 Q88,4 100,2"
-              stroke="#16a34a"
+              stroke="#4A90D9"
               strokeWidth="2"
               strokeLinecap="round"
             />
@@ -62,10 +64,7 @@ export default function Header({
           {loggedIn ? (
             <>
               {/* Add button */}
-              <button
-                onClick={onAdd}
-                className="btn-press inline-flex items-center gap-1.5 px-5 py-2.5 bg-green-600 text-white text-sm font-medium rounded-2xl hover:bg-green-700 shadow-md shadow-green-200/50 hover:shadow-lg hover:shadow-green-200/60 cursor-pointer transition-all duration-200"
-              >
+              <button onClick={onAdd} className="btn-primary btn-press">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
@@ -81,12 +80,12 @@ export default function Header({
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-[#2d4a2d] hover:bg-green-50 rounded-2xl cursor-pointer transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-[#4a5b6e] hover:bg-[#f0f4f8] rounded-full cursor-pointer transition-colors"
                 >
-                  <span className="size-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-xs font-bold">
+                  <span className="size-7 rounded-full bg-gradient-to-br from-[#4A90D9] to-[#5B8DEF] text-white flex items-center justify-center text-xs font-bold shadow-sm">
                     {username.charAt(0).toUpperCase()}
                   </span>
-                  <span className="hidden sm:inline">{username}</span>
+                  <span className="hidden sm:inline text-[#1a2332]">{username}</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
@@ -102,19 +101,19 @@ export default function Header({
                 </button>
 
                 {menuOpen && (
-                  <div className="absolute right-0 top-full mt-1 w-40 bg-white rounded-2xl shadow-lg border border-[#d4e8d4] overflow-hidden z-50">
+                  <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded-2xl shadow-lg border border-[#d0dae6] overflow-hidden z-50 py-1">
                     <button
                       onClick={() => {
                         setMenuOpen(false);
                         onChangePassword();
                       }}
-                      className="w-full text-left px-4 py-2.5 text-sm text-[#2d4a2d] hover:bg-green-50 cursor-pointer transition-colors flex items-center gap-2"
+                      className="w-full text-left px-4 py-2.5 text-sm text-[#1a2332] hover:bg-[#EBF3FC] hover:text-[#4A90D9] cursor-pointer transition-colors flex items-center gap-2"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="currentColor"
-                        className="size-4 text-green-500"
+                        className="size-4 text-[#8fa1b5]"
                       >
                         <path
                           fillRule="evenodd"
@@ -129,7 +128,7 @@ export default function Header({
                         setMenuOpen(false);
                         onLogout();
                       }}
-                      className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 cursor-pointer transition-colors flex items-center gap-2"
+                      className="w-full text-left px-4 py-2.5 text-sm text-[#4A90D9] hover:bg-[#EBF3FC] cursor-pointer transition-colors flex items-center gap-2"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -155,10 +154,7 @@ export default function Header({
               </div>
             </>
           ) : (
-            <button
-              onClick={onLogin}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-green-700 border-2 border-green-300 rounded-2xl hover:bg-green-50 hover:border-green-400 cursor-pointer transition-all duration-200"
-            >
+            <button onClick={onLogin} className="btn-outline">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"

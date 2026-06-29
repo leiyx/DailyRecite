@@ -54,26 +54,27 @@ export default function PostForm({ post, onClose, onSuccess }: PostFormProps) {
   }
 
   const inputCls =
-    "w-full px-4 py-2.5 border-2 border-[#d4e8d4] rounded-xl text-sm bg-white text-[#1a2e1a] placeholder:text-[#b8d8b8] focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200";
-  const labelCls = "block text-sm font-medium text-[#2d4a2d] mb-1.5";
+    "w-full px-4 py-2.5 border border-[#d0dae6] rounded-xl text-sm bg-white text-[#1a2332] placeholder:text-[#8fa1b5] focus:outline-none focus:border-[#4A90D9] focus:ring-2 focus:ring-[#EBF3FC] transition-all duration-200";
+  const labelCls = "block text-sm font-medium text-[#4a5b6e] mb-1.5";
 
   return (
     <div
-      className="modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-green-950/30 backdrop-blur-sm p-4"
+      className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ backgroundColor: "var(--color-overlay)", backdropFilter: "blur(4px)" }}
       onClick={onClose}
     >
       <div
-        className="modal-panel bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-[#d4e8d4]"
+        className="modal-panel bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#d4e8d4] bg-[#fefcf5]">
-          <h2 className="text-lg font-bold text-[#1a2e1a] font-hand">
-            {isEdit ? "编辑记录" : "新增记录"}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#e8ecf2]">
+          <h2 className="font-display text-lg font-black text-[#1a2332]">
+            {isEdit ? "✏️ 编辑记录" : "✨ 新增记录"}
           </h2>
           <button
             onClick={onClose}
-            className="p-1.5 text-[#6b8f6b] hover:text-green-700 hover:bg-green-50 rounded-xl cursor-pointer transition-colors"
+            className="p-2 text-[#8fa1b5] hover:text-[#1a2332] hover:bg-[#f0f4f8] rounded-full cursor-pointer transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -87,11 +88,11 @@ export default function PostForm({ post, onClose, onSuccess }: PostFormProps) {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-4 bg-white">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
           {/* Date */}
           <div>
             <label className={labelCls}>
-              日期 <span className="text-green-500">*</span>
+              日期 <span className="text-[#4A90D9]">*</span>
             </label>
             <input
               type="date"
@@ -116,7 +117,7 @@ export default function PostForm({ post, onClose, onSuccess }: PostFormProps) {
           {/* Article */}
           <div>
             <label className={labelCls}>
-              文章内容 <span className="text-green-500">*</span>
+              文章内容 <span className="text-[#4A90D9]">*</span>
             </label>
             <textarea
               value={article}
@@ -141,26 +142,23 @@ export default function PostForm({ post, onClose, onSuccess }: PostFormProps) {
 
           {/* Error */}
           {error && (
-            <p className="text-sm text-red-500 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">
-              {error}
+            <p className="text-sm text-[#e0556a] bg-[#fef2f4] border border-[#f0c0c6] rounded-xl px-4 py-2.5 flex items-center gap-2">
+              ⚠️ {error}
             </p>
           )}
         </form>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-[#d4e8d4] bg-[#fefcf5]">
-          <button
-            onClick={onClose}
-            className="px-5 py-2.5 text-sm font-medium text-green-700 border-2 border-green-200 rounded-2xl hover:bg-green-50 hover:border-green-300 cursor-pointer transition-all duration-200"
-          >
+        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-[#e8ecf2] bg-[#f0f4f8]">
+          <button onClick={onClose} className="btn-outline">
             取消
           </button>
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="btn-press px-6 py-2.5 text-sm font-medium text-white bg-green-600 rounded-2xl hover:bg-green-700 shadow-md shadow-green-200/50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-200"
+            className="btn-primary"
           >
-            {submitting ? "提交中..." : isEdit ? "保存" : "创建"}
+            {submitting ? "⏳ 提交中..." : isEdit ? "💾 保存" : "✨ 创建"}
           </button>
         </div>
       </div>

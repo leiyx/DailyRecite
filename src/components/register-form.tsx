@@ -59,29 +59,45 @@ export default function RegisterForm({
   }
 
   const inputCls =
-    "w-full px-4 py-2.5 border-2 border-[#d4e8d4] rounded-xl text-sm bg-white text-[#1a2e1a] placeholder:text-[#b8d8b8] focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200";
+    "w-full px-4 py-2.5 border border-[#d0dae6] rounded-xl text-sm bg-white text-[#1a2332] placeholder:text-[#8fa1b5] focus:outline-none focus:border-[#4A90D9] focus:ring-2 focus:ring-[#EBF3FC] transition-all duration-200";
 
   return (
     <div
-      className="modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-green-950/30 backdrop-blur-sm p-4"
+      className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ backgroundColor: "var(--color-overlay)", backdropFilter: "blur(4px)" }}
       onClick={onClose}
     >
       <div
-        className="modal-panel bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden border border-[#d4e8d4]"
+        className="modal-panel bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-5 border-b border-[#d4e8d4] bg-[#fefcf5]">
-          <h2 className="text-lg font-bold text-[#1a2e1a] font-hand">
-            创建管理员账户
-          </h2>
-          <p className="text-xs text-[#6b8f6b] mt-1">
-            这是你的个人网站，只需创建一次账户
-          </p>
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#e8ecf2]">
+          <div>
+            <h2 className="font-display text-lg font-black text-[#1a2332]">
+              🎉 创建管理员账户
+            </h2>
+            <p className="text-xs text-[#8fa1b5] mt-1">
+              这是你的个人网站，只需创建一次账户
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 text-[#8fa1b5] hover:text-[#1a2332] hover:bg-[#f0f4f8] rounded-full cursor-pointer transition-colors shrink-0"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="size-5"
+            >
+              <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+            </svg>
+          </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4 bg-white">
+        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[#2d4a2d] mb-1.5">
+            <label className="block text-sm font-medium text-[#4a5b6e] mb-1.5">
               用户名
             </label>
             <input
@@ -94,7 +110,7 @@ export default function RegisterForm({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#2d4a2d] mb-1.5">
+            <label className="block text-sm font-medium text-[#4a5b6e] mb-1.5">
               密码
             </label>
             <input
@@ -106,7 +122,7 @@ export default function RegisterForm({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#2d4a2d] mb-1.5">
+            <label className="block text-sm font-medium text-[#4a5b6e] mb-1.5">
               确认密码
             </label>
             <input
@@ -119,24 +135,24 @@ export default function RegisterForm({
           </div>
 
           {error && (
-            <p className="text-sm text-red-500 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">
-              {error}
+            <p className="text-sm text-[#e0556a] bg-[#fef2f4] border border-[#f0c0c6] rounded-xl px-4 py-2.5 flex items-center gap-2">
+              ⚠️ {error}
             </p>
           )}
 
           <button
             type="submit"
             disabled={submitting}
-            className="btn-press w-full px-5 py-2.5 text-sm font-medium text-white bg-green-600 rounded-2xl hover:bg-green-700 shadow-md shadow-green-200/50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-200"
+            className="btn-primary w-full"
           >
-            {submitting ? "创建中..." : "创建账户"}
+            {submitting ? "⏳ 创建中..." : "创建账户"}
           </button>
         </form>
 
-        <div className="px-6 py-4 border-t border-[#d4e8d4] bg-[#fefcf5] text-center">
+        <div className="px-6 py-4 border-t border-[#e8ecf2] bg-[#f0f4f8] text-center">
           <button
             onClick={onSwitchToLogin}
-            className="text-sm text-green-600 hover:text-green-700 cursor-pointer transition-colors"
+            className="text-sm text-[#4A90D9] hover:text-[#3A7BC8] cursor-pointer transition-colors font-medium"
           >
             已有账户？登录
           </button>

@@ -1,0 +1,1 @@
+- [Blue Theme Design System](blue-theme-design-system.md) -- Color palette, CSS custom properties, card system, visual conventions after coral-to-blue redesign

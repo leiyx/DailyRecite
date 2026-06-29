@@ -11,9 +11,20 @@ interface PostDetailProps {
   onDelete: (id: number) => void;
 }
 
-function WavyHeading({ children }: { children: string }) {
+const CARD_COLORS = [
+  "#4A90D9", "#5B8DEF", "#6C8EBF", "#3D7AB5",
+  "#7EB8DA", "#A0C4E8", "#89B4D9",
+];
+
+function WavyHeading({
+  children,
+  color = "#4A90D9",
+}: {
+  children: string;
+  color?: string;
+}) {
   return (
-    <h3 className="relative inline-block font-hand text-base text-green-600 mb-3">
+    <h3 className="relative inline-block font-hand text-base text-[#4a5b6e] mb-3">
       {children}
       <svg
         className="absolute -bottom-1 left-0 w-full"
@@ -24,7 +35,7 @@ function WavyHeading({ children }: { children: string }) {
       >
         <path
           d="M0,1.5 Q5,0 10,1.5 Q15,3 20,1.5 Q25,0 30,1.5 Q35,3 40,1.5"
-          stroke="#16a34a"
+          stroke={color}
           strokeWidth="1.5"
           strokeLinecap="round"
         />
@@ -67,6 +78,8 @@ export default function PostDetail({
 
   if (postId === null) return null;
 
+  const barColor = post ? CARD_COLORS[post.id % CARD_COLORS.length] : CARD_COLORS[0];
+
   function formatDate(dateStr: string): string {
     const [y, m, d] = dateStr.split("-");
     return `${y}年${Number(m)}月${Number(d)}日`;
@@ -74,26 +87,30 @@ export default function PostDetail({
 
   return (
     <div
-      className="modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-green-950/30 backdrop-blur-sm p-4"
+      className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ backgroundColor: "var(--color-overlay)", backdropFilter: "blur(4px)" }}
       onClick={onClose}
     >
       <div
-        className="modal-panel bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden border border-[#d4e8d4]"
+        className="modal-panel--pop bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Color bar */}
+        <div className="h-1 w-full shrink-0" style={{ backgroundColor: barColor }} />
+
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#d4e8d4] bg-[#fefcf5]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#e8ecf2]">
           <div>
-            <span className="font-hand text-sm text-green-500">
+            <span className="font-hand text-sm text-[#8fa1b5]">
               {post ? formatDate(post.date) : ""}
             </span>
-            <h2 className="text-lg font-bold text-[#1a2e1a] mt-0.5">
+            <h2 className="font-display text-lg font-black text-[#1a2332] mt-0.5">
               {post?.title || "加载中..."}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-[#6b8f6b] hover:text-green-700 hover:bg-green-50 rounded-xl cursor-pointer transition-colors"
+            className="p-2 text-[#8fa1b5] hover:text-[#1a2332] hover:bg-[#f0f4f8] rounded-full cursor-pointer transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -107,17 +124,17 @@ export default function PostDetail({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-5 bg-white">
+        <div className="flex-1 overflow-y-auto px-6 py-5">
           {loading ? (
             <div className="flex justify-center py-12">
-              <div className="size-6 border-2 border-green-200 border-t-green-600 rounded-full animate-spin" />
+              <div className="size-6 border-2 border-[#d0dae6] border-t-[#4A90D9] rounded-full animate-spin" />
             </div>
           ) : post ? (
             <div className="space-y-6">
               {/* Article */}
               <div>
-                <WavyHeading>文章</WavyHeading>
-                <div className="text-[#1a2e1a] leading-relaxed whitespace-pre-wrap text-base">
+                <WavyHeading color="#4A90D9">文章</WavyHeading>
+                <div className="text-[#1a2332] leading-relaxed whitespace-pre-wrap text-[1.05rem]">
                   {post.article}
                 </div>
               </div>
@@ -125,24 +142,30 @@ export default function PostDetail({
               {/* Notes */}
               {post.notes && (
                 <div>
-                  <WavyHeading>注释</WavyHeading>
-                  <div className="text-[#2d4a2d] leading-relaxed whitespace-pre-wrap text-base bg-green-50/70 rounded-2xl p-4 border border-green-100">
+                  <WavyHeading color="#6C8EBF">注释</WavyHeading>
+                  <div
+                    className="text-[#4a5b6e] leading-relaxed whitespace-pre-wrap text-base rounded-2xl p-5 border"
+                    style={{
+                      backgroundColor: barColor + "0D",
+                      borderColor: barColor + "33",
+                    }}
+                  >
                     {post.notes}
                   </div>
                 </div>
               )}
             </div>
           ) : (
-            <p className="text-center text-[#6b8f6b] py-12">未找到文章</p>
+            <p className="text-center text-[#8fa1b5] py-12">未找到文章</p>
           )}
         </div>
 
         {/* Actions */}
         {post && loggedIn && (
-          <div className="flex items-center gap-3 px-6 py-4 border-t border-[#d4e8d4] bg-[#fefcf5]">
+          <div className="flex items-center gap-3 px-6 py-4 border-t border-[#e8ecf2] bg-[#f0f4f8]">
             <button
               onClick={() => onEdit(post)}
-              className="btn-press inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-green-700 bg-white border-2 border-green-300 rounded-2xl hover:bg-green-50 hover:border-green-400 cursor-pointer transition-all duration-200"
+              className="btn-primary"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -160,7 +183,7 @@ export default function PostDetail({
                   onDelete(post.id);
                 }
               }}
-              className="btn-press inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-red-500 bg-white border-2 border-red-200 rounded-2xl hover:bg-red-50 hover:border-red-300 cursor-pointer transition-all duration-200"
+              className="btn-danger-outline"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

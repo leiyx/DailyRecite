@@ -1,35 +1,70 @@
 @import "tailwindcss";
 
-:root {
-  --background: #fefcf5;
-  --foreground: #1a2e1a;
-  --primary: #16a34a;
-  --primary-hover: #15803d;
-  --muted: #6b8f6b;
-  --border: #d4e8d4;
-  --accent: #f0fdf4;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-noto-sans-sc);
+
+  /* Background */
+  --color-bg-primary: #f0f4f8;
+
+  /* Primary accent — Blue */
+  --color-accent: #4A90D9;
+  --color-accent-hover: #3A7BC8;
+  --color-accent-light: #EBF3FC;
+
+  /* Secondary accent — Steel Blue */
+  --color-secondary: #6C8EBF;
+  --color-secondary-hover: #5A7DB0;
+  --color-secondary-light: #F0F4FA;
+
+  /* Tertiary accents — Blue spectrum */
+  --color-yellow: #7EB8DA;
+  --color-yellow-light: #F2F7FB;
+  --color-purple: #5B8DEF;
+  --color-purple-light: #EEF3FD;
+  --color-mint: #3D7AB5;
+  --color-mint-light: #EBF2F9;
+  --color-peach: #A0C4E8;
+  --color-peach-light: #F5F8FC;
+  --color-pink: #89B4D9;
+  --color-pink-light: #F4F7FB;
+
+  /* Text */
+  --color-text-primary: #1a2332;
+  --color-text-secondary: #4a5b6e;
+  --color-text-muted: #8fa1b5;
+
+  /* Borders & surfaces */
+  --color-border: #d0dae6;
+  --color-surface: #ffffff;
+  --color-overlay: rgba(26, 35, 50, 0.4);
 }
+
+/* ─── Body — Cool white with subtle blue dot grid ─── */
 
 body {
-  color: var(--foreground);
+  color: var(--color-text-primary);
   font-family: Arial, Helvetica, sans-serif;
-  background-color: var(--background);
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  background-color: var(--color-bg-primary);
+  background-image:
+    radial-gradient(circle, rgba(74, 144, 217, 0.10) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-/* Handwritten font utility */
+/* ─── Font utilities ─── */
+
 .font-hand {
   font-family: "KaiTi", "STKaiti", "楷体", cursive, serif;
 }
 
-/* Wavy hand-drawn underline */
+.font-display {
+  font-family: var(--font-display), "Noto Sans SC", sans-serif;
+}
+
+/* ─── Wavy hand-drawn underline (colored) ─── */
+
 .wavy-underline {
   position: relative;
 }
@@ -40,11 +75,125 @@ body {
   bottom: -2px;
   width: 100%;
   height: 4px;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='4' viewBox='0 0 60 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,2 Q7.5,0 15,2 Q22.5,4 30,2 Q37.5,0 45,2 Q52.5,4 60,2' fill='none' stroke='%2316a34a' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='4' viewBox='0 0 60 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,2 Q7.5,0 15,2 Q22.5,4 30,2 Q37.5,0 45,2 Q52.5,4 60,2' fill='none' stroke='%234A90D9' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x;
   background-size: 60px 4px;
 }
 
-/* Modal enter animations */
+.wavy-underline--sky::after {
+  background: url("data:image/svg+xml,%3Csvg width='60' height='4' viewBox='0 0 60 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,2 Q7.5,0 15,2 Q22.5,4 30,2 Q37.5,0 45,2 Q52.5,4 60,2' fill='none' stroke='%236C8EBF' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x;
+  background-size: 60px 4px;
+}
+
+/* ─── Card color bar (top stripe) ─── */
+
+.card-color-bar {
+  height: 4px;
+  width: 100%;
+  border-radius: 9999px 9999px 0 0;
+  transition: height 0.2s ease;
+}
+
+/* ─── Emoji tag ─── */
+
+.emoji-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.125rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease;
+}
+.emoji-tag:hover {
+  transform: scale(1.15) rotate(5deg);
+}
+
+/* ─── Buttons ─── */
+
+.btn-press {
+  transition: transform 0.1s ease;
+}
+.btn-press:active {
+  transform: scale(0.95);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  background: var(--color-accent);
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(74, 144, 217, 0.25);
+}
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(74, 144, 217, 0.35);
+}
+.btn-primary:active {
+  transform: translateY(0) scale(0.97);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-outline:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: var(--color-accent-light);
+}
+
+.btn-danger-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #e0556a;
+  background: var(--color-surface);
+  border: 2px solid #f0c0c6;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-danger-outline:hover {
+  background: #fef2f4;
+  border-color: #e0556a;
+}
+
+/* ─── Animations ─── */
+
 @keyframes modal-in {
   from {
     opacity: 0;
@@ -61,26 +210,97 @@ body {
   to { opacity: 1; }
 }
 
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes card-bounce {
+  0% { transform: translateY(0) rotate(var(--card-rotate, 0deg)); }
+  100% { transform: translateY(-4px) rotate(0deg); }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes card-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(74, 144, 217, 0.15); }
+  50% { box-shadow: 0 0 20px rgba(74, 144, 217, 0.30); }
+}
+
 .modal-overlay {
   animation: modal-overlay-in 0.2s ease-out;
 }
 .modal-panel {
   animation: modal-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
-/* Float animation for empty state */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+.modal-panel--pop {
+  animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
-
-/* Button press effect */
-.btn-press {
-  transition: transform 0.1s ease;
+.animate-spin-slow {
+  animation: spin-slow 6s linear infinite;
 }
-.btn-press:active {
-  transform: scale(0.95);
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* Card stagger animation — applied via style prop */
+.card-stagger {
+  animation: slide-up 0.4s ease-out both;
+}
+
+/* ─── Reduced motion ─── */
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-panel,
+  .modal-panel--pop,
+  .modal-overlay,
+  .card-stagger,
+  .animate-float,
+  .animate-spin-slow,
+  .animate-sparkle {
+    animation: none;
+  }
+  .btn-primary:hover {
+    transform: none;
+  }
+  .card-stagger {
+    opacity: 1;
+  }
 }
